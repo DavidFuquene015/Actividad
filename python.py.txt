@@ -1,0 +1,31 @@
+import argparse
+import string
+
+def contar_palabras(nombre_archivo):
+    """
+    Cuenta el número de palabras en un archivo de texto.
+    Ignora la puntuación y convierte a minúsculas para contar palabras iguales.
+    """
+    try:
+        with open(nombre_archivo, 'r', encoding='utf-8') as archivo:
+            texto = archivo.read().lower() # Leer el archivo y convertir a minúsculas
+            texto_sin_puntuacion = texto.translate(str.maketrans('', '', string.punctuation)) # Eliminar puntuación
+            palabras = texto_sin_puntuacion.split() # Dividir el texto en palabras
+            return len(palabras)
+    except FileNotFoundError:
+        return f"Error: No se encontró el archivo '{nombre_archivo}'."
+    except Exception as e:
+        return f"Ocurrió un error: {e}"
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Cuenta las palabras en un archivo de texto.")
+    parser.add_argument("archivo", help="El nombre del archivo de texto a analizar.")
+    args = parser.parse_args()
+
+    nombre_archivo = args.archivo
+    conteo = contar_palabras(nombre_archivo)
+
+    if isinstance(conteo, str) and "Error" in conteo or "Ocurrió un error" in conteo:
+        print(conteo) # Imprimir mensajes de error directamente
+    else:
+        print(f"El archivo '{nombre_archivo}' contiene aproximadamente {conteo} palabras.")
